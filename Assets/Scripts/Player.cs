@@ -6,8 +6,12 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance;
+    public event Action<IInteractable> OnSelectedInteractableChanged;
+    
     [SerializeField] private float movementSpeed = 2;
     [SerializeField] private Animator animator = null;
+    [SerializeField] private float interactionRange = 2f;
 
     [SerializeField] private ContactFilter2D contactFilter2D;
     
@@ -15,8 +19,17 @@ public class Player : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private PlayerInput _playerInput;
     private Vector2 _inputDirection;
+    private Vector2 _lastDirection;
+    private BaseInteractable _currentInteractable;
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+        }
+
+        Instance = this;
+        
         _rigidbody = GetComponent<Rigidbody2D>();
         _playerInput = GetComponent<PlayerInput>();
     }
@@ -24,21 +37,26 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
+        //HandleInteractions();
     }
+
     
+
     private void Move()
     {
         bool couldMove = false;
         if (_inputDirection != Vector2.zero)
         {
             couldMove = TryMove(_inputDirection);
-
+            _lastDirection = _inputDirection;
             if (!couldMove)
             {
                 couldMove = TryMove(new Vector2(_inputDirection.x, 0));
+                _lastDirection = new Vector2(_inputDirection.x, 0);
                 if (!couldMove)
                 {
                     couldMove = TryMove(new Vector2(0, _inputDirection.y));
+                    _lastDirection = new Vector2(0, _inputDirection.y);
                 }
             }
         }
@@ -47,6 +65,38 @@ public class Player : MonoBehaviour
             couldMove = false;
         }
         
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.TryGetComponent(out BaseInteractable interactable))
+        {
+            SetCurrentInteractable(interactable);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.TryGetComponent(out BaseInteractable interactable))
+        {
+            SetCurrentInteractable(null);
+        }
+    }
+
+    private void HandleInteractions()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, _inputDirection, interactionRange);
+        Debug.DrawLine(transform.position, hit.normal, Color.yellow);
+        if (hit.collider.TryGetComponent(out BaseInteractable interactable))
+        {
+            SetCurrentInteractable(interactable);
+        }
+    }
+
+    private void SetCurrentInteractable(BaseInteractable interactable)
+    {
+        _currentInteractable = interactable;
+        OnSelectedInteractableChanged?.Invoke(_currentInteractable);
     }
 
     private bool TryMove(Vector2 direction)
@@ -76,6 +126,12 @@ public class Player : MonoBehaviour
     public void OnMove(InputValue inputValue)
     {
         _inputDirection = inputValue.Get<Vector2>();
+    }
+
+    public void OnInteract(InputValue inputValue)
+    {
+        if (_currentInteractable == null) return;
+        _currentInteractable.Interact();
     }
     
     
