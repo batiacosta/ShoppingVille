@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     public static Player Instance;
     public event Action<IInteractable> OnSelectedInteractableChanged;
+    public event Action<BaseInteractable> OnInteracted; 
     
     [SerializeField] private float movementSpeed = 2;
     [SerializeField] private Animator animator = null;
@@ -21,6 +22,8 @@ public class Player : MonoBehaviour
     private Vector2 _inputDirection;
     private Vector2 _lastDirection;
     private BaseInteractable _currentInteractable;
+    private bool _isInteracting = false;
+    private bool _canMove = true;
     private void Awake()
     {
         if (Instance != null)
@@ -34,13 +37,29 @@ public class Player : MonoBehaviour
         _playerInput = GetComponent<PlayerInput>();
     }
 
-    private void FixedUpdate()
+    private void Start()
     {
-        Move();
-        //HandleInteractions();
+        GameManager.Instance.OnStateChanged += GameManager_OnStateChanged;
     }
 
-    
+    private void GameManager_OnStateChanged()
+    {
+        _canMove = GameManager.Instance.IsStatePlaying();
+        _isInteracting = !_canMove;
+    }
+
+    private void FixedUpdate()
+    {
+        if (_canMove)
+        {
+            Move();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.OnStateChanged -= GameManager_OnStateChanged;
+    }
 
     private void Move()
     {
@@ -130,8 +149,12 @@ public class Player : MonoBehaviour
 
     public void OnInteract(InputValue inputValue)
     {
+        if (_isInteracting) return;
         if (_currentInteractable == null) return;
         _currentInteractable.Interact();
+        _isInteracting = true;
+        _canMove = false;
+        OnInteracted?.Invoke(_currentInteractable);
     }
     
     
