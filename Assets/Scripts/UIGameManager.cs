@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIGameManager : MonoBehaviour
 {
@@ -12,7 +13,9 @@ public class UIGameManager : MonoBehaviour
     [SerializeField] private BaseWindow shopWindow;
     [SerializeField] private BaseWindow bankWindow;
     [SerializeField] private BaseWindow cabinWindow;
+    [SerializeField] private UIGameOver gameOverWindow;
     [SerializeField] private TextMeshProUGUI goldText;
+    [SerializeField] private Image clock;
     
     private void Awake()
     {
@@ -24,13 +27,28 @@ public class UIGameManager : MonoBehaviour
     {
         GameManager.Instance.OnInteractingEnabled += GameManager_OnInteractingEnabled;
         GameManager.Instance.OnGoldAmountChanged += GameManager_OnGoldAmountChanged;
+        GameManager.Instance.OnStateChanged += GameManager_OnStateChanged;
         HideWindows();
     }
-
     private void OnDestroy()
     {
         GameManager.Instance.OnInteractingEnabled -= GameManager_OnInteractingEnabled;
         GameManager.Instance.OnGoldAmountChanged -= GameManager_OnGoldAmountChanged;
+        GameManager.Instance.OnStateChanged -= GameManager_OnStateChanged;
+    }
+
+    private void GameManager_OnStateChanged()
+    {
+        if (GameManager.Instance.IsGamePaused())
+        {
+            
+        }
+
+        if (GameManager.Instance.IsGameOver())
+        {
+            HideWindows();
+            gameOverWindow.gameObject.SetActive(true);
+        }
     }
 
     private void GameManager_OnGoldAmountChanged(int amount)
@@ -69,11 +87,17 @@ public class UIGameManager : MonoBehaviour
         shopWindow.gameObject.SetActive(false);
         bankWindow.gameObject.SetActive(false);
         cabinWindow.gameObject.SetActive(false);
+        gameOverWindow.gameObject.SetActive(false);
     }
 
     public void CloseWindow()
     {
         HideWindows();
         OnWindowsClosed?.Invoke();
+    }
+
+    public void UpdateClock(float fillValue)
+    {
+        clock.fillAmount = fillValue;
     }
 }
