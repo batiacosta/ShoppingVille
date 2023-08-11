@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class Shop : BaseInteractable
 {
-    private bool _canInteract = false;
     public override void Interact()
     {
         Debug.Log($"Interacting with {gameObject.name}");
