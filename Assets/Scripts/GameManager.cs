@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public event Action<int> OnGoldAmountChanged;
 
     private int _gold = 1000;
-    private float _maxTime = 12f;
+    private float _maxTime = 120f;
     private float _currentTime = 0;
     private float _goldReducerPeriod = 1f;
     private float _currentGoldTime;
