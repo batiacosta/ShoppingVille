@@ -13,6 +13,7 @@ public class ItemSO : ScriptableObject
     [SerializeField] private ItemType type;
     [SerializeField] private List<Sprite> itemSprites;
     [SerializeField] private Sprite icon;
+    [SerializeField] private int price;
 
     [SerializeField] private int _quantity;
 
@@ -25,4 +26,5 @@ public class ItemSO : ScriptableObject
     public ItemType GetItemType() => type;
     public Sprite GetIcon() => icon;
     public List<Sprite> GetItemSprites() => itemSprites;
+    public int GetPrice() => price;
 }

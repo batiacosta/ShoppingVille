@@ -47,6 +47,7 @@ public class Player : MonoBehaviour
     {
         GameManager.Instance.OnStateChanged += GameManager_OnStateChanged;
         playerInventoryManager.InventorySetUp();
+        playerOutfitManager.SetOutfit();
     }
 
     private void GameManager_OnStateChanged()
@@ -158,6 +159,7 @@ public class Player : MonoBehaviour
     {
         if (_isInteracting) return;
         if (_currentInteractable == null) return;
+        if(!_currentInteractable.CanInteract()) return;
         _currentInteractable.Interact();
         _isInteracting = true;
         _canMove = false;

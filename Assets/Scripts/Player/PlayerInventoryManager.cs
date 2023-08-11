@@ -2,15 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerInventoryManager : MonoBehaviour
 {
-    [SerializeField] private InventorySO playerInventory;
+    [SerializeField] private InventorySO playerInventorySo;
 
     public void InventorySetUp()
     {
-        playerInventory.InventorySetup();
+        playerInventorySo.InventorySetup();
+        Debug.Log($"Inventory set up {playerInventorySo.GetBootsSo().Count}");
     }
 
-    public InventorySO GetInventory() => playerInventory;
+    public InventorySO GetInventory() => playerInventorySo;
 }

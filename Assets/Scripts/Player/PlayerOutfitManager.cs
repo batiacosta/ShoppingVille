@@ -7,18 +7,27 @@ using UnityEngine.Assertions.Must;
 public class PlayerOutfitManager : MonoBehaviour
 {
     [SerializeField] private OutfitSO outfitSo;
-
     [SerializeField] private List<SpriteRenderer> uniformSprites;
     [SerializeField] private List<SpriteRenderer> weaponSprites;
     [SerializeField] private List<SpriteRenderer> bootsSprites;
 
+    private InventorySO _playerInventorySo;
     private List<Sprite> _currentUniform = new List<Sprite>();
     private List<Sprite> _currentWeapon = new List<Sprite>();
     private List<Sprite> _currenBoots = new List<Sprite>();
 
     private void Start()
     {
+        SetOutfitSo();
         SetOutfit();
+    }
+
+    private void SetOutfitSo()
+    {
+        _playerInventorySo = Player.Instance.GetPlayerInventory();
+        outfitSo.SetUniform(_playerInventorySo.GetUniformsSo()[0].GetItemSprites());
+        outfitSo.SetWeapon(_playerInventorySo.GetWeaponsSo()[0].GetItemSprites());
+        outfitSo.SetBoots(_playerInventorySo.GetBootsSo()[0].GetItemSprites());
     }
 
     public void SetOutfit()
