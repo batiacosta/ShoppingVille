@@ -13,16 +13,12 @@ MonoBehaviour:
   m_Name: PlayerInventorySO
   m_EditorClassIdentifier: 
   _itemsSo:
-  - {fileID: 11400000, guid: 080d1e3e10c6e459cad9f40c751ad148, type: 2}
-  - {fileID: 11400000, guid: 8e0b523d750b14609b96a7e34cd4e685, type: 2}
   - {fileID: 11400000, guid: d039d6076f1cb4696b51ae0d5b00b00e, type: 2}
-  - {fileID: 11400000, guid: 1f8df4939023c47f989c55d237e88bf8, type: 2}
-  - {fileID: 11400000, guid: 85a3d6ff5ba7c4eb5b8f845f0a7a0f18, type: 2}
+  - {fileID: 11400000, guid: 8e0b523d750b14609b96a7e34cd4e685, type: 2}
+  - {fileID: 11400000, guid: 32c5feab4fb6a4bc6b213bcd61ee19ba, type: 2}
   _uniformsSo:
-  - {fileID: 11400000, guid: 85a3d6ff5ba7c4eb5b8f845f0a7a0f18, type: 2}
+  - {fileID: 11400000, guid: 32c5feab4fb6a4bc6b213bcd61ee19ba, type: 2}
   _weaponsSo:
   - {fileID: 11400000, guid: d039d6076f1cb4696b51ae0d5b00b00e, type: 2}
-  - {fileID: 11400000, guid: 1f8df4939023c47f989c55d237e88bf8, type: 2}
   _bootsSo:
-  - {fileID: 11400000, guid: 080d1e3e10c6e459cad9f40c751ad148, type: 2}
   - {fileID: 11400000, guid: 8e0b523d750b14609b96a7e34cd4e685, type: 2}

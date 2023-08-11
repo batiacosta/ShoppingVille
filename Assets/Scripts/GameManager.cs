@@ -11,8 +11,10 @@ public class GameManager : MonoBehaviour
     public event Action<int> OnGoldAmountChanged;
 
     private int _gold = 1000;
-    private float _maxTime = 120f;
+    private float _maxTime = 12f;
     private float _currentTime = 0;
+    private float _goldReducerPeriod = 1f;
+    private float _currentGoldTime;
 
     public enum State
     {
@@ -23,6 +25,13 @@ public class GameManager : MonoBehaviour
         GameOver
     }
 
+    public enum GameOverStatus
+    {
+        GotBroken, TimeFinished
+    }
+
+
+    private GameOverStatus _gameOverStatus;
     private State _state;
     private void Awake()
     {
@@ -34,6 +43,9 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        _currentTime = 0;
+        _currentGoldTime = 0;
+        _gameOverStatus = GameOverStatus.GotBroken;
         Player.Instance.OnInteracted += Player_OnInteracted;
         UIGameManager.Instance.OnWindowsClosed += UIGameManager_OnWindowsClosed;
         SetGameState(State.GamePlaying);
@@ -41,10 +53,38 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (_state == State.GamePlaying)
+        if (_state == State.GamePlaying || _state == State.Interacting)
         {
-            //  Reduce gold every second
+            ReduceGoldByTime();
+            UpdateGameTime();
         }
+    }
+
+    private void ReduceGoldByTime()
+    {
+        if (_currentGoldTime <= _goldReducerPeriod)
+        {
+            _currentGoldTime += Time.deltaTime;
+        }
+        else
+        {
+            AddGold(-Mathf.RoundToInt(_currentGoldTime * 5));
+            _currentGoldTime = 0;
+        }
+    }
+
+    private void UpdateGameTime()
+    {
+        if (_currentTime <= _maxTime)
+        {
+            _currentTime += Time.deltaTime;
+        }
+        else
+        {
+            _gameOverStatus = GameOverStatus.TimeFinished;
+            SetGameState(State.GameOver);
+        }
+        UIGameManager.Instance.UpdateClock(_currentTime / _maxTime);
     }
 
     private void OnDestroy()
@@ -81,13 +121,19 @@ public class GameManager : MonoBehaviour
         
         if (_gold <= 0)
         {
-            // Game over
             _gold = 0;
+            _gameOverStatus = GameOverStatus.GotBroken;
+            SetGameState(State.GameOver);
         }
         OnGoldAmountChanged?.Invoke(_gold);
     }
+    
 
     public bool IsStatePlaying() => _state == State.GamePlaying;
+    public bool IsGamePaused() => _state == State.PausedGame;
+    public bool IsGameOver() => _state == State.GameOver;
+
+    public bool DidLose() => _gameOverStatus == GameOverStatus.GotBroken;
     public int GetGold() => _gold;
     public BaseInteractable GetActiveInteractable() => _currentActiveInteractable;
 
