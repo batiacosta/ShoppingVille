@@ -26,6 +26,9 @@ public class Player : MonoBehaviour
     private BaseInteractable _currentInteractable;
     private bool _isInteracting = false;
     private bool _canMove = true;
+    private Transform _nativeTransform;
+    private static readonly int IsWalking = Animator.StringToHash("IsWalking");
+
     private void Awake()
     {
         if (Instance != null)
@@ -37,6 +40,7 @@ public class Player : MonoBehaviour
         
         _rigidbody = GetComponent<Rigidbody2D>();
         _playerInput = GetComponent<PlayerInput>();
+        _nativeTransform = GetComponent<Transform>();
     }
 
     private void Start()
@@ -81,11 +85,20 @@ public class Player : MonoBehaviour
                     _lastDirection = new Vector2(0, _inputDirection.y);
                 }
             }
+            if (_inputDirection.x < 0)
+            {
+                transform.rotation = Quaternion.AngleAxis(-180, Vector3.up);
+            }
+            else
+            {
+                transform.rotation = Quaternion.AngleAxis(0, Vector3.up);
+            }
         }
         else
         {
             couldMove = false;
         }
+        animator.SetBool(IsWalking, couldMove);
         
     }
 
