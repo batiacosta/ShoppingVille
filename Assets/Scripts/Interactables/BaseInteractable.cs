@@ -16,7 +16,6 @@ public class BaseInteractable : MonoBehaviour, IInteractable
     public virtual void Sleep()
     {
         _canInteract = false;
-        Debug.Log($"Interctable sleeping is {gameObject.name}");
         OnSleepStarted?.Invoke();
     }
 

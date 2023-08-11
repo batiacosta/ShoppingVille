@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class Cabin : BaseInteractable
 {
+    private void Start()
+    {
+        _sleepingTime = 5f;
+    }
     public override void Interact()
     {
-        Debug.Log($"Interacting with {gameObject.name}");
+        
     }
 }
