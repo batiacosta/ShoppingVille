@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UIGameManager : MonoBehaviour
@@ -11,6 +12,7 @@ public class UIGameManager : MonoBehaviour
     [SerializeField] private BaseWindow shopWindow;
     [SerializeField] private BaseWindow bankWindow;
     [SerializeField] private BaseWindow cabinWindow;
+    [SerializeField] private TextMeshProUGUI goldText;
     
     private void Awake()
     {
@@ -20,17 +22,26 @@ public class UIGameManager : MonoBehaviour
 
     private void Start()
     {
-        Player.Instance.OnInteracted += Player_OnInteracted;
+        GameManager.Instance.OnInteractingEnabled += GameManager_OnInteractingEnabled;
+        GameManager.Instance.OnGoldAmountChanged += GameManager_OnGoldAmountChanged;
         HideWindows();
     }
 
     private void OnDestroy()
     {
-        Player.Instance.OnInteracted -= Player_OnInteracted;
+        GameManager.Instance.OnInteractingEnabled -= GameManager_OnInteractingEnabled;
+        GameManager.Instance.OnGoldAmountChanged -= GameManager_OnGoldAmountChanged;
     }
 
-    private void Player_OnInteracted(BaseInteractable interactable)
+    private void GameManager_OnGoldAmountChanged(int amount)
     {
+        UpdateGold(amount);
+    }
+
+    private void GameManager_OnInteractingEnabled(BaseInteractable interactable)
+    {
+        if (!interactable.CanInteract()) return;
+
         switch (interactable)
         {
             case Shop:
@@ -48,11 +59,22 @@ public class UIGameManager : MonoBehaviour
         }
     }
 
+    private void UpdateGold(int amount)
+    {
+        goldText.text = amount.ToString();
+    }
+
     public void HideWindows()
     {
         shopWindow.gameObject.SetActive(false);
         bankWindow.gameObject.SetActive(false);
         cabinWindow.gameObject.SetActive(false);
+    }
+
+    public void CloseWindow()
+    {
+        HideWindows();
         OnWindowsClosed?.Invoke();
+        Debug.Log("UIGameManager triggers OnWindowsClosed ");
     }
 }
