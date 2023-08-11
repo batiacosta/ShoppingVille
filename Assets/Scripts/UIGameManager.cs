@@ -75,6 +75,5 @@ public class UIGameManager : MonoBehaviour
     {
         HideWindows();
         OnWindowsClosed?.Invoke();
-        Debug.Log("UIGameManager triggers OnWindowsClosed ");
     }
 }

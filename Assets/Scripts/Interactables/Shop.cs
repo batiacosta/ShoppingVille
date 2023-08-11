@@ -6,9 +6,13 @@ using UnityEngine;
 
 public class Shop : BaseInteractable
 {
+    private void Start()
+    {
+        _sleepingTime = 8f;
+    }
     public override void Interact()
     {
-        Debug.Log($"Interacting with {gameObject.name}");
+        
     }
 
     public void DisplayCanInteract()
