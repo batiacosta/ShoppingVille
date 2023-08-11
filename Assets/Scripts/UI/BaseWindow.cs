@@ -6,6 +6,6 @@ public class BaseWindow : MonoBehaviour
 {
     public virtual void Close()
     {
-        UIGameManager.Instance.HideWindows();
+        UIGameManager.Instance.CloseWindow();
     }
 }

@@ -3,26 +3,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class InteractableVisual : MonoBehaviour
 {
     [SerializeField] private GameObject[] highlightObjects;
-    [SerializeField] private BaseInteractable _interactableParent;
+    [SerializeField] private Image sleepingIndicator;
+    [SerializeField] private BaseInteractable interactableParent;
+
+    private float _sleepingTime;
+    private float _currentSleepingTime = 0f;
 
     private void Start()
     {
         Hide();
         Player.Instance.OnSelectedInteractableChanged += Player_OnSelectedInteractableChanged;
+        interactableParent.OnSleepStarted += BaseInteractable_OnSleepStarted;
+        sleepingIndicator.gameObject.SetActive(false);
     }
 
+    private void Update()
+    {
+        UpdateSleepingIndicator();
+    }
+    
     private void OnDestroy()
     {
         Player.Instance.OnSelectedInteractableChanged -= Player_OnSelectedInteractableChanged;
+        interactableParent.OnSleepStarted -= BaseInteractable_OnSleepStarted;
     }
 
-    private void Player_OnSelectedInteractableChanged(IInteractable interactable)
+    private void BaseInteractable_OnSleepStarted()
     {
-        if (_interactableParent == interactable)
+        _sleepingTime = interactableParent.GetSleepingTime();
+        _currentSleepingTime = 0;
+        sleepingIndicator.gameObject.SetActive(true);
+    }
+
+    private void Player_OnSelectedInteractableChanged(BaseInteractable interactable)
+    {
+        if (interactableParent == interactable)
         {
             Show();
         }
@@ -44,6 +64,24 @@ public class InteractableVisual : MonoBehaviour
         foreach (GameObject highlightObject in highlightObjects)
         {
             highlightObject.gameObject.SetActive(false);
+        }
+    }
+    
+    private void UpdateSleepingIndicator()
+    {
+        if (!interactableParent.CanInteract())
+        {
+            if (_currentSleepingTime < _sleepingTime)
+            {
+                _currentSleepingTime += Time.deltaTime;
+                sleepingIndicator.fillAmount = _currentSleepingTime / _sleepingTime;
+            }
+            else
+            {
+                _currentSleepingTime = 0;
+                interactableParent.SetCanInteract(true);
+                sleepingIndicator.gameObject.SetActive(false);
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     public static Player Instance;
-    public event Action<IInteractable> OnSelectedInteractableChanged;
+    public event Action<BaseInteractable> OnSelectedInteractableChanged;
     public event Action<BaseInteractable> OnInteracted; 
     
     [SerializeField] private float movementSpeed = 2;
@@ -102,18 +102,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void HandleInteractions()
-    {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, _inputDirection, interactionRange);
-        Debug.DrawLine(transform.position, hit.normal, Color.yellow);
-        if (hit.collider.TryGetComponent(out BaseInteractable interactable))
-        {
-            SetCurrentInteractable(interactable);
-        }
-    }
-
     private void SetCurrentInteractable(BaseInteractable interactable)
     {
+        //if (!interactable.CanInteract()) return;
         _currentInteractable = interactable;
         OnSelectedInteractableChanged?.Invoke(_currentInteractable);
     }
@@ -156,6 +147,7 @@ public class Player : MonoBehaviour
         _canMove = false;
         OnInteracted?.Invoke(_currentInteractable);
     }
-    
-    
+    public BaseInteractable GetCurrentInteractable() => _currentInteractable;
+
+
 }
