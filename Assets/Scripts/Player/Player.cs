@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float movementSpeed = 2;
     [SerializeField] private Animator animator = null;
     [SerializeField] private float interactionRange = 2f;
+    [SerializeField] private PlayerOutfitManager playerOutfitManager = null;
+    [SerializeField] private PlayerInventoryManager playerInventoryManager;
 
     [SerializeField] private ContactFilter2D contactFilter2D;
     
@@ -40,6 +42,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.OnStateChanged += GameManager_OnStateChanged;
+        playerInventoryManager.InventorySetUp();
     }
 
     private void GameManager_OnStateChanged()
@@ -147,6 +150,16 @@ public class Player : MonoBehaviour
         _canMove = false;
         OnInteracted?.Invoke(_currentInteractable);
     }
+
+    public void SetOutfit()
+    {
+        playerOutfitManager.SetOutfit();
+    }
+
+    public InventorySO GetPlayerInventory() => playerInventoryManager.GetInventory();
+    
+    
+    
     public BaseInteractable GetCurrentInteractable() => _currentInteractable;
 
 
