@@ -88,6 +88,7 @@ public class GameManager : MonoBehaviour
     }
 
     public bool IsStatePlaying() => _state == State.GamePlaying;
+    public int GetGold() => _gold;
     public BaseInteractable GetActiveInteractable() => _currentActiveInteractable;
 
 

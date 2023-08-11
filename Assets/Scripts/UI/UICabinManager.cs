@@ -32,6 +32,13 @@ public class UICabinManager : MonoBehaviour
             bootRightButton.onClick.AddListener(() => ChangeBoots(true));
     }
 
+    private void OnEnable()
+    {
+        UpdateUniformVisuals(out var uniformSprites);
+        UpdateWeaponVisuals(out var weaponSprites);
+        UpdateBootsVisuals(out var bootsSprites);
+    }
+
     private void ChangeUniform(bool isNext)
     {
         if (isNext)
@@ -45,14 +52,19 @@ public class UICabinManager : MonoBehaviour
             if (_uniformIndex < 0) _uniformIndex = Player.Instance.GetPlayerInventory().GetUniformsSo().Count -1;
         }
 
-        List<Sprite> uniformSprites = Player.Instance.GetPlayerInventory().GetUniformsSo()[_uniformIndex].GetItemSprites();
+        UpdateUniformVisuals(out var uniformSprites);
+
+        outfitSo.SetUniform(uniformSprites);
+        Player.Instance.SetOutfit();
+    }
+
+    private void UpdateUniformVisuals(out List<Sprite> uniformSprites)
+    {
+        uniformSprites = Player.Instance.GetPlayerInventory().GetUniformsSo()[_uniformIndex].GetItemSprites();
         for (int i = 0; i < this.uniformSpritesUI.Count; i++)
         {
             uniformSpritesUI[i].sprite = uniformSprites[i];
         }
-
-        outfitSo.SetUniform(uniformSprites);
-        Player.Instance.SetOutfit();
     }
 
     private void ChangeWeapon(bool isNext)
@@ -68,15 +80,21 @@ public class UICabinManager : MonoBehaviour
             if (_weaponIndex <= 0) _weaponIndex = Player.Instance.GetPlayerInventory().GetWeaponsSo().Count -1;
         }
         
-        List<Sprite> weaponSprites = Player.Instance.GetPlayerInventory().GetWeaponsSo()[_weaponIndex].GetItemSprites();
-        for (int i = 0; i < this.weaponSpritesUI.Count; i++)
-        {
-            weaponSpritesUI[i].sprite = weaponSprites[i];
-        }
+        UpdateWeaponVisuals(out var weaponSprites);
 
         outfitSo.SetWeapon(weaponSprites);
         Player.Instance.SetOutfit();
     }
+
+    private void UpdateWeaponVisuals(out List<Sprite> weaponSprites)
+    {
+        weaponSprites = Player.Instance.GetPlayerInventory().GetWeaponsSo()[_weaponIndex].GetItemSprites();
+        for (int i = 0; i < this.weaponSpritesUI.Count; i++)
+        {
+            weaponSpritesUI[i].sprite = weaponSprites[i];
+        }
+    }
+
     private void ChangeBoots(bool isNext)
     {
         if (isNext)
@@ -90,13 +108,18 @@ public class UICabinManager : MonoBehaviour
             if (_bootsIndex <= 0) _bootsIndex = Player.Instance.GetPlayerInventory().GetBootsSo().Count -1;
         }
         
-        List<Sprite> bootsSprites = Player.Instance.GetPlayerInventory().GetBootsSo()[_bootsIndex].GetItemSprites();
+        UpdateBootsVisuals(out var bootsSprites);
+
+        outfitSo.SetBoots(bootsSprites);
+        Player.Instance.SetOutfit();
+    }
+
+    private void UpdateBootsVisuals(out List<Sprite> bootsSprites)
+    {
+        bootsSprites = Player.Instance.GetPlayerInventory().GetBootsSo()[_bootsIndex].GetItemSprites();
         for (int i = 0; i < this.bootsSpritesUI.Count; i++)
         {
             bootsSpritesUI[i].sprite = bootsSprites[i];
         }
-
-        outfitSo.SetBoots(bootsSprites);
-        Player.Instance.SetOutfit();
     }
 }
