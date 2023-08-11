@@ -59,7 +59,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 3, y: 1}
   m_EdgeRadius: 0
 --- !u!212 &3825352231849968847
 SpriteRenderer:
@@ -183,6 +183,10 @@ PrefabInstance:
     - target: {fileID: 611835840956581207, guid: 41e569b25ed7041a6a2ff450da6be8ea, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2623257909785448129, guid: 41e569b25ed7041a6a2ff450da6be8ea, type: 3}
+      propertyPath: m_text
+      value: BANK
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e569b25ed7041a6a2ff450da6be8ea, type: 3}
