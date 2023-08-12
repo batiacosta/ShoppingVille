@@ -144,4 +144,8 @@ public class GameManager : MonoBehaviour
     public BaseInteractable GetActiveInteractable() => _currentActiveInteractable;
 
 
+    public void PauseGame()
+    {
+        SetGameState(State.PausedGame);
+    }
 }

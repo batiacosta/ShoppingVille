@@ -11,7 +11,6 @@ public class PlayerInventoryManager : MonoBehaviour
     public void InventorySetUp()
     {
         playerInventorySo.InventorySetup();
-        Debug.Log($"Inventory set up {playerInventorySo.GetBootsSo().Count}");
     }
 
     public InventorySO GetInventory() => playerInventorySo;

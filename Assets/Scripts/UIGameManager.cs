@@ -14,6 +14,7 @@ public class UIGameManager : MonoBehaviour
     [SerializeField] private BaseWindow bankWindow;
     [SerializeField] private BaseWindow cabinWindow;
     [SerializeField] private UIGameOver gameOverWindow;
+    [SerializeField] private UIGamePaused pauseGameWindow;
     [SerializeField] private TextMeshProUGUI goldText;
     [SerializeField] private Image clock;
     
@@ -41,7 +42,7 @@ public class UIGameManager : MonoBehaviour
     {
         if (GameManager.Instance.IsGamePaused())
         {
-            
+            pauseGameWindow.gameObject.SetActive(true);
         }
 
         if (GameManager.Instance.IsGameOver())
