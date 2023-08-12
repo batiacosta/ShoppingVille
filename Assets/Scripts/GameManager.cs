@@ -11,10 +11,11 @@ public class GameManager : MonoBehaviour
     public event Action<int> OnGoldAmountChanged;
 
     private int _gold = 1000;
-    private float _maxTime = 120f;
+    private float _maxTime = 60f;
     private float _currentTime = 0;
     private float _goldReducerPeriod = 1f;
     private float _currentGoldTime;
+    private int _goldChunk = 25;
 
     public enum State
     {
@@ -48,7 +49,7 @@ public class GameManager : MonoBehaviour
         _gameOverStatus = GameOverStatus.GotBroken;
         Player.Instance.OnInteracted += Player_OnInteracted;
         UIGameManager.Instance.OnWindowsClosed += UIGameManager_OnWindowsClosed;
-        SetGameState(State.GamePlaying);
+        SetGameState(State.WaitingToStart);
     }
 
     private void Update()
@@ -68,7 +69,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            AddGold(-Mathf.RoundToInt(_currentGoldTime * 5));
+            AddGold(-Mathf.RoundToInt(_currentGoldTime * _goldChunk));
             _currentGoldTime = 0;
         }
     }
@@ -126,6 +127,11 @@ public class GameManager : MonoBehaviour
             SetGameState(State.GameOver);
         }
         OnGoldAmountChanged?.Invoke(_gold);
+    }
+
+    public void SetPlay()
+    {
+        SetGameState(State.GamePlaying);
     }
     
 
