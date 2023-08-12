@@ -166,6 +166,11 @@ public class Player : MonoBehaviour
         OnInteracted?.Invoke(_currentInteractable);
     }
 
+    public void OnPause()
+    {
+        GameManager.Instance.PauseGame();
+    }
+
     public void SetOutfit()
     {
         playerOutfitManager.SetOutfit();
